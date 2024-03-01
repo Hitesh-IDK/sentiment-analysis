@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Analytics</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+      integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- <script src="https://cdnjs.com/libraries/Chart.js"></script> -->
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      .main__container {
+        width: 1000px;
+        margin: 20px auto;
+
+        padding-bottom: 20px;
+
+        display: flex;
+        flex-direction: column;
+
+        background-color: rgba(128, 128, 128, 0.29);
+      }
+
+      .main__title {
+        margin-top: 20px;
+
+        font-size: 4rem;
+        letter-spacing: 1.5px;
+
+        align-self: center;
+        font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+      }
+
+      .main__url {
+        align-self: center;
+
+        font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+          "Lucida Sans", Arial, sans-serif;
+      }
+
+      .sub__title {
+        margin-left: 55px;
+        margin-right: 80px;
+        margin-bottom: 10px;
+
+        padding: 20px 0px 5px 0px;
+        border-bottom: 3px solid rgba(128, 128, 128, 0.689);
+
+        font-size: 2rem;
+        font-weight: 500;
+
+        color: rgba(0, 0, 0, 0.57);
+      }
+
+      .reuse_container {
+        align-self: center;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        max-width: 900px;
+        width: 100%;
+
+        background-color: white;
+        margin: 5px 10px;
+        padding: 30px 10px;
+
+        gap: 90px;
+
+        border-radius: 10px;
+        box-shadow: 0px 0px 20px rgba(128, 128, 128, 0.582);
+      }
+
+      .tweet_table {
+        display: grid;
+        padding: 0px 10px;
+        width: 100%;
+        grid-template-columns: 3fr 1fr 1fr 1fr;
+        grid-template-rows: 1fr;
+      }
+
+      .table_column {
+        display: flex;
+        flex-direction: column;
+        margin: 0px 10px;
+      }
+
+      .table__item {
+        border-bottom: 2px solid rgba(128, 128, 128, 0.466);
+        padding: 3px 5px;
+        font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
+          sans-serif;
+      }
+
+      .table__number {
+        align-self: center;
+        text-align: center;
+        width: 100%;
+      }
+
+      .table__header {
+        align-self: center;
+        text-align: center;
+        font-size: 1.2rem;
+        width: 100%;
+
+        border: none;
+        padding-bottom: 10px;
+      }
+
+      .bar__container {
+        display: flex;
+        flex-direction: column;
+
+        gap: 2rem;
+      }
+
+      .risk__container {
+        align-self: center;
+
+        width: 9rem;
+      }
+
+      .risk__container_safe {
+        border: 2px solid #28a982;
+      }
+
+      .risk__container_mid {
+        border: 2px solid #b09624;
+      }
+
+      .risk__container_risky {
+        border: 2px solid #ff6b6b;
+      }
+
+      .risk__title {
+        display: inline-block;
+        text-align: center;
+
+        margin-right: 4px;
+        padding: 3px 8px;
+      }
+
+      .risk__container_safe .risk__title {
+        background-color: #96f2d7;
+      }
+
+      .risk__container_mid .risk__title {
+        background-color: #ffec99;
+      }
+
+      .risk__container_risky .risk__title {
+        background-color: #ffa8a8;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main__container">
+      <h1 class="main__title">Analysis of</h1>
+      <p class="main__url">{{profile_url}}</p>
+
+      <div class="sub__title">Data Representation</div>
+      <div class="container reuse_container">
+        <div class="col-md-5 bar__container">
+          <canvas id="barChart"></canvas>
+          <div
+            class="risk__container risk__container_risky"
+            id="risk-container"
+          >
+            <span class="risk__title" id="risk-title">Risk Factor</span>
+            <span id="risk-factor">{{risk_factor}}</span>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <canvas id="pieChart"></canvas>
+        </div>
+      </div>
+
+      <div class="sub__title">Tweets</div>
+      <div class="reuse_container">
+        <div class="tweet_table">
+          <div class="table_column" id="tweet-column">
+            <div class="table__header table__item">Tweets</div>
+          </div>
+          <div class="table_column" id="tweet-pos">
+            <div class="table__header table__item">POS</div>
+          </div>
+          <div class="table_column" id="tweet-neu">
+            <div class="table__header table__item">NEU</div>
+          </div>
+          <div class="table_column" id="tweet-neg">
+            <div class="table__header table__item">NEG</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    const barCtx = document.getElementById("barChart");
+
+    new Chart(barCtx, {
+      type: "bar",
+      data: {
+        labels: ["POS", "NEUTRAL", "NEG"],
+        datasets: [
+          {
+            label: "# of sentiments",
+            data: {{bar_chart_data|safe}},
+            borderWidth: 1,
+            backgroundColor: [
+              "rgba(75, 192, 192, 0.2)",
+              "rgba(153, 102, 255, 0.2)",
+              "rgba(255, 99, 132, 0.2)",
+            ],
+
+            borderColor: [
+              "rgb(75, 192, 192)",
+              "rgb(153, 102, 255)",
+              "rgb(255, 99, 132)",
+            ],
+          },
+        ],
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+          },
+        },
+      },
+    });
+
+    const pieCtx = document.getElementById("pieChart");
+
+    new Chart(pieCtx, {
+      type: "pie",
+      data: {
+        labels: ["POS", "NEUTRAL", "NEG"],
+        datasets: [
+          {
+            label: "# of sentiments",
+            data: {{bar_chart_data|safe}},
+            borderWidth: 1,
+            backgroundColor: [
+              "rgba(75, 192, 192, 0.2)",
+              "rgba(153, 102, 255, 0.2)",
+              "rgba(255, 99, 132, 0.2)",
+            ],
+
+            borderColor: [
+              "rgb(75, 192, 192)",
+              "rgb(153, 102, 255)",
+              "rgb(255, 99, 132)",
+            ],
+          },
+        ],
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+          },
+        },
+      },
+    });
+
+    const tweetMessages = {{tweet_messages|safe}}
+
+    const msgColumn = document.getElementById("tweet-column");
+
+    if(tweetMessages) {
+        for(index in tweetMessages) {
+            const tweetMsg = document.createElement("div");
+            tweetMsg.className = "table__item";
+            tweetMsg.textContent = tweetMessages[index] ;
+            msgColumn.insertAdjacentElement("beforeend", tweetMsg);
+        }
+    }
+
+    const tweetPositives = {{tweet_positives|safe}}
+    const posColumn = document.getElementById("tweet-pos");
+
+    if(tweetPositives) {
+        for(index in tweetPositives) {
+            const tweetPos = document.createElement("div");
+            tweetPos.className = "table__item table__number";
+            tweetPos.textContent = tweetPositives[index] ;
+            posColumn.insertAdjacentElement("beforeend", tweetPos);
+        }
+    }
+
+    const tweetNeutrals = {{tweet_neutrals|safe}}
+    const neuColumn = document.getElementById("tweet-neu");
+
+    if(tweetNeutrals) {
+        for(index in tweetNeutrals) {
+            const tweetNeu = document.createElement("div");
+            tweetNeu.className = "table__item table__number";
+            tweetNeu.textContent = tweetNeutrals[index] ;
+            neuColumn.insertAdjacentElement("beforeend", tweetNeu);
+        }
+    }
+
+    const tweetNegatives = {{tweet_negatives|safe}};
+    const negColumn = document.getElementById("tweet-neg");
+
+    if(tweetNegatives) {
+        for(index in tweetNegatives) {
+            const tweetNeg = document.createElement("div");
+            tweetNeg.className = "table__item table__number";
+            tweetNeg.textContent = tweetNegatives[index] ;
+            negColumn.insertAdjacentElement("beforeend", tweetNeg);
+        }
+    }
+
+    const riskFactor = {{risk_factor|safe}};
+    const riskElement = document.getElementById("risk-factor");
+    const riskContainer = document.getElementById("risk-container");
+
+    if(riskFactor >= 0.7) {
+        riskContainer.className = "risk__container risk__container_risky";
+    } else if (riskFactor  >= 0.3) {
+        riskContainer.className = "risk__container risk__container_mid";
+    } else {
+        riskContainer.className = "risk__container risk__container_safe";
+    }
+  </script>
+</html>
