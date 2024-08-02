@@ -76,7 +76,7 @@ def result(request):
 
 def startSelenium(setUrl):
     #Driver for chrome
-    driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
+    driver = webdriver.Chrome()
 
     options = Options()
     options.headless = True
@@ -91,7 +91,7 @@ def startSelenium(setUrl):
 
     sentences = []
     firstScroll = True
-    loops = 20
+    loops = 5
     verticalLoop = 0
 
     while(loops > 0):
